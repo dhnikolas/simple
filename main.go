@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"net/http/httputil"
 	"syscall"
 )
 
@@ -20,7 +21,9 @@ func main() {
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Service number " + count)
+		byteDump, _ := httputil.DumpRequest(r, true)
+		fmt.Fprintf(w, "Service " + count)
+		fmt.Fprintf(w, "\n" + string(byteDump))
 	})
 	http.ListenAndServe(":" + port, nil)
 }
